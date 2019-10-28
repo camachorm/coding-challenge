@@ -8,7 +8,7 @@ namespace ConstructionLine.CodingChallenge.Tests
     public class SearchEngineTests : SearchEngineTestsBase
     {
         [Test]
-        public void Test()
+        public void ProvidedTest()
         {
             var shirts = new List<Shirt>
             {
@@ -21,7 +21,130 @@ namespace ConstructionLine.CodingChallenge.Tests
 
             var searchOptions = new SearchOptions
             {
-                Colors = new List<Color> {Color.Red}
+                Colors = new List<Color> { Color.Red }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void EmptySearchOptionsTest()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void FullSearchOptionsTest()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Colors = Color.All,
+                Sizes = Size.All
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void SingleSizeAllColorsSearchOptionsTest()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Sizes = new List<Size> { Size.Medium },
+                Colors = Color.All
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void SingleColorAllSizesSearchOptionsTest()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Sizes = Size.All,
+                Colors = new List<Color> { Color.Red }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void SingleColorSingleSizeAllSizesSearchOptionsTest()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Sizes = new List<Size> { Size.Small },
+                Colors = new List<Color> { Color.Red }
             };
 
             var results = searchEngine.Search(searchOptions);
